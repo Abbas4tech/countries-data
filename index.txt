@@ -1,0 +1,32 @@
+import data from "./myjsonfile.json";
+import countries from "./countries.json";
+
+Array.prototype.groupBy = function (callback) {
+  const output = {};
+  this.forEach((e, i) => {
+    const groupWith = callback(this[i]);
+    output.hasOwnProperty(groupWith)
+      ? output[groupWith].push(e)
+      : (output[groupWith] = [e]);
+  });
+  return output;
+};
+
+const grouped = data.groupBy((city) => city.country);
+
+  for (const country in grouped) {
+    const groupedCities = grouped[country];
+    groupedCities.forEach((city) => {
+      const selectedCountry = countries.filter((item) => item.code === country);
+      if (selectedCountry[0])
+        city.countryName = selectedCountry[0].name
+          .toLowerCase()
+          .split(" ")
+          .join("_");
+    });
+  }
+
+  const arr = [];
+  Object.values(grouped).forEach((item) => arr.push(...item));
+  const groupedBYWholeName = arr.groupBy((city) => city.countryName);
+  console.log(groupedBYWholeName);
