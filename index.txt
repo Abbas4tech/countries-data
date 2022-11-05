@@ -12,7 +12,17 @@ Array.prototype.groupBy = function (callback) {
   return output;
 };
 
-const grouped = data.groupBy((city) => city.country);
+const requiredFieldsOnly = data.map(({ cityId, name, country, loc }) => ({
+    cityId,
+    name,
+    country,
+    coordinates: {
+      longitude: loc.coordinates[0],
+      latitude: loc.coordinates[1],
+    },
+  }));
+
+const grouped = requiredFieldsOnly.groupBy((city) => city.country);
 
   for (const country in grouped) {
     const groupedCities = grouped[country];
